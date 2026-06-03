@@ -1,5 +1,4 @@
-uniform sampler2D uVatTexturePos;
-uniform sampler2D uVatTextureRot;
+uniform sampler2D uVatTexture;
 uniform float uFrame;
 uniform float uTotalFrames;
 uniform float uNumBones;
@@ -26,19 +25,26 @@ void main() {
     vUv = uv;
     
     float v = (uFrame + 0.5) / uTotalFrames;
-    float u = (aVatBoneIndex + 0.5) * 1.0 / uNumBones;
-    vec2 coords = vec2(u, v);
+
+    float totalPackedPixels = uNumBones * 2.0;
     
-    vec3 pos = texture2D(uVatTexturePos, coords).rgb;
-    vec4 q = texture2D(uVatTextureRot, coords);
-    q = normalize(q);
+    // packing [t,q][t,q][t,q][t,q]...
+    float idx = aVatBoneIndex * 2.0 + .5;
+
+    float u_pos = idx / totalPackedPixels;
+    float u_rot = (idx + 1.0) / totalPackedPixels;
+    vec2 coords_pos = vec2(u_pos, v);
+    vec2 coords_rot = vec2(u_rot, v);
+    
+    vec3 pos = texture2D(uVatTexture, coords_pos).rgb;
+    vec4 q = normalize(texture2D(uVatTexture, coords_rot));
 
     mat3 rotMatrix = getVatRotationMatrix(q);
 
-    /* WORKS */
     vec3 rotatedVertex = rotMatrix * position;
     vec3 rotatedBindPos = rotMatrix * aVatBindPos;
     vec3 motionBridge = pos - rotatedBindPos;
-    vec3 finalPosition = rotatedVertex + motionBridge * 100.0;
+    vec3 finalPosition = rotatedVertex + motionBridge;
+
     csm_Position = finalPosition;
 }

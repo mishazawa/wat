@@ -32,3 +32,4 @@ geo/
 out/
 
 test_*.fbx
+test_*.glb

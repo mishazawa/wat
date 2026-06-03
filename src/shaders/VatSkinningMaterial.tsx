@@ -5,8 +5,7 @@ import FRAG from "./fragment.glsl?raw";
 import { type RefObject } from "react";
 
 export type VatUniforms = {
-  uVatTexturePos: { value: DataTexture | null };
-  uVatTextureRot: { value: DataTexture | null };
+  uVatTexture: { value: DataTexture | null };
   uFrame: { value: number };
   uTotalFrames: { value: number };
   uNumBones: { value: number };
