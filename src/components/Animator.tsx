@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { VAT_MODE } from "../constants";
+
 import { useTextureAnimation } from "../utils/useTextureAnimation";
 import {
   type VatUniforms,
@@ -13,7 +13,7 @@ import { VatModel } from "./VatModel";
 
 export function Animator() {
   const uniforms = useRef<VatUniforms>(getDefaultUniforms());
-  useTextureAnimation(uniforms, VAT_MODE.LOOP);
+  useTextureAnimation(uniforms);
 
   return (
     <VatModel meshSrc={TEST_MODEL_REST_GLTF}>

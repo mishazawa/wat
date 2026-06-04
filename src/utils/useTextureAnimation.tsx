@@ -1,22 +1,29 @@
 import { useFrame } from "@react-three/fiber";
 import type { RefObject } from "react";
 import type { VatUniforms } from "../vat/VatSkinningMaterial";
-import { DEFAULT_FPS, VAT_MODE, type VatMode } from "../constants";
+import { DEFAULT_FPS } from "../constants";
+import { useStore } from "../vat/store";
 
-export function useTextureAnimation(
-  uniforms: RefObject<VatUniforms>,
-  mode: VatMode,
-) {
+export function useTextureAnimation(uniforms: RefObject<VatUniforms>) {
+  const setProgress = useStore((state) => state.setProgress);
+
   useFrame((state) => {
-    const time = state.clock.getElapsedTime();
+    const { isPaused } = useStore.getState();
+    if (isPaused) return;
 
-    let currentFrame = 0; //stopped
+    let time = state.clock.getElapsedTime();
 
-    if (mode === VAT_MODE.ONE_SHOT)
-      currentFrame = Math.floor(time * DEFAULT_FPS);
-    if (mode === VAT_MODE.LOOP)
-      currentFrame = loopMode(time, uniforms.current.uTotalFrames.value);
+    let currentFrame = 0;
 
+    currentFrame = loopMode(time, uniforms.current.uTotalFrames.value);
+    currentFrame /= uniforms.current.uTotalFrames.value;
+
+    setProgress(currentFrame);
+  });
+
+  useFrame(() => {
+    const { progress } = useStore.getState();
+    let currentFrame = uniforms.current.uTotalFrames.value * progress;
     uniforms.current.uFrame.value = currentFrame;
   });
 }
