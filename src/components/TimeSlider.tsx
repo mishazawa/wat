@@ -1,8 +1,6 @@
-import { useState, type CSSProperties } from "react";
 import { useStore } from "../vat/store";
 
 export function VatSlider() {
-  const [isHovered, setIsHovered] = useState(false);
   const setPause = useStore((state) => state.setPause);
   const togglePause = useStore((state) => state.togglePause);
 
