@@ -17,3 +17,7 @@ declare module '*.exr' {
   const src: string;
   export default src;
 }
+
+type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
