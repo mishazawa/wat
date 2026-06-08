@@ -4,7 +4,10 @@ import type { VatUniforms } from "../vat/VatSkinningMaterial";
 import { DEFAULT_FPS } from "../constants";
 import { useStore } from "../vat/store";
 
-export function useTextureAnimation(uniforms: RefObject<VatUniforms>) {
+export function useTextureAnimation(
+  uniforms: RefObject<VatUniforms>,
+  fps: number = DEFAULT_FPS,
+) {
   const setProgress = useStore((state) => state.setProgress);
 
   useFrame((state) => {
@@ -15,7 +18,7 @@ export function useTextureAnimation(uniforms: RefObject<VatUniforms>) {
 
     let currentFrame = 0;
 
-    currentFrame = loopMode(time, uniforms.current.uTotalFrames.value);
+    currentFrame = loopMode(time, uniforms.current.uTotalFrames.value, fps);
     currentFrame /= uniforms.current.uTotalFrames.value;
 
     setProgress(currentFrame);
@@ -23,7 +26,10 @@ export function useTextureAnimation(uniforms: RefObject<VatUniforms>) {
 
   useFrame(() => {
     const { progress } = useStore.getState();
-    let currentFrame = uniforms.current.uTotalFrames.value * progress;
+    const totalFrames = uniforms.current.uTotalFrames.value;
+    let currentFrame = progress * totalFrames;
+    currentFrame = Math.floor(currentFrame);
+    currentFrame = Math.min(currentFrame, totalFrames - 1);
     uniforms.current.uFrame.value = currentFrame;
   });
 }

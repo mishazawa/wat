@@ -1,24 +1,39 @@
 import { useGLTF } from "@react-three/drei";
-import type { SkinnedMesh } from "three";
+import { type SkinnedMesh } from "three";
 import { ATTRIBUTE_MAPPING } from "../constants";
 import { useFindChildByName } from "../utils/useFindChildByName";
 import { useFrustumCulling } from "../utils/useFrustumCulling";
 import { useRenameGeometryAttrib } from "../utils/useRenameGeometryAttrib";
 import type { ThreeElements } from "@react-three/fiber";
+import { useRef } from "react";
+import { useTextureAnimation } from "../utils/useTextureAnimation";
+import {
+  type VatUniforms,
+  getDefaultUniforms,
+  VatMaterial,
+} from "../vat/VatSkinningMaterial";
 
 type AnimatedModelProps = Prettify<
   Omit<Partial<ThreeElements["primitive"]>, "object"> & {
     meshSrc: string;
+    animationSrc: string;
   }
 >;
 
-export function VatModel({ meshSrc, children, ...props }: AnimatedModelProps) {
+export function VatModel({
+  meshSrc,
+  animationSrc,
+  ...props
+}: AnimatedModelProps) {
   const { scene } = useGLTF(meshSrc);
   useFrustumCulling(scene);
 
   const [skin] = useFindChildByName<SkinnedMesh>(scene, "skin", [scene]);
 
   useRenameGeometryAttrib(skin, ATTRIBUTE_MAPPING);
+
+  const uniforms = useRef<VatUniforms>(getDefaultUniforms());
+  useTextureAnimation(uniforms, 30);
 
   return (
     skin && (
@@ -28,7 +43,12 @@ export function VatModel({ meshSrc, children, ...props }: AnimatedModelProps) {
           geometry={skin.geometry}
           skeleton={skin.skeleton}
         >
-          {children}
+          <VatMaterial
+            animationSrc={animationSrc}
+            uniforms={uniforms}
+            numFrames={240}
+            numBones={skin.skeleton.bones.length}
+          />
         </skinnedMesh>
       </group>
     )

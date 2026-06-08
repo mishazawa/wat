@@ -5,6 +5,7 @@ import {
   MeshPhysicalMaterial,
   NearestFilter,
   NoColorSpace,
+  Vector2,
 } from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
 import VERT from "./shaders/vertex.glsl?raw";
@@ -19,11 +20,15 @@ export type VatUniforms = {
   uTotalFrames: { value: number };
   uNumBones: { value: number };
   uDiffuse: { value: Color };
+  uTexDim: { value: Vector2 };
+  uStride: { value: number };
 };
 
 type VatMaterialProps = Prettify<
   Partial<MeshPhysicalMaterial> & {
     animationSrc: string;
+    numFrames: number;
+    numBones: number;
     uniforms: RefObject<VatUniforms>;
   }
 >;
@@ -31,6 +36,8 @@ type VatMaterialProps = Prettify<
 export function VatMaterial({
   uniforms,
   animationSrc,
+  numFrames,
+  numBones,
   ...props
 }: VatMaterialProps) {
   const texture: DataTexture = useLoader(EXRLoader, animationSrc, (loader) => {
@@ -46,11 +53,20 @@ export function VatMaterial({
       texture.flipY = false;
       texture.needsUpdate = true;
 
-      const totalFrames = texture.image.height;
-      const numBones = texture.image.width / 2;
+      uniforms.current.uTexDim.value = new Vector2(
+        texture.image.width,
+        texture.image.height,
+      );
+
       uniforms.current.uVatTexture.value = texture;
       uniforms.current.uNumBones.value = numBones;
-      uniforms.current.uTotalFrames.value = totalFrames;
+      uniforms.current.uStride.value = Math.ceil(
+        (numBones * 2) / texture.image.width,
+      );
+      uniforms.current.uTotalFrames.value = Math.floor(
+        texture.image.height / uniforms.current.uStride.value,
+      );
+      uniforms.current.uTotalFrames.value = numFrames;
     }
   }, [texture]);
 
@@ -72,5 +88,7 @@ export function getDefaultUniforms() {
     uTotalFrames: { value: 1 },
     uNumBones: { value: 1 },
     uDiffuse: { value: new Color(0xaaffee) },
+    uTexDim: { value: new Vector2(1, 1) },
+    uStride: { value: 1 },
   };
 }

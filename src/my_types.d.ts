@@ -18,6 +18,11 @@ declare module '*.exr' {
   export default src;
 }
 
+declare module '*.hdr' {
+  const src: string;
+  export default src;
+}
+
 type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};

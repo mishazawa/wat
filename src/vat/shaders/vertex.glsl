@@ -3,10 +3,15 @@ uniform float uFrame;
 uniform float uTotalFrames;
 uniform float uNumBones;
 
+uniform vec2 uTexDim;
+uniform float uStride;
+
 varying vec2 vUv;
+varying vec3 vColor;
 
 attribute float aVatBoneIndex;
 attribute vec3 aVatBindPos;
+attribute vec3 color;
 
 mat3 getVatRotationMatrix(vec4 q) {
     float x2 = q.x + q.x;  float y2 = q.y + q.y;  float z2 = q.z + q.z;
@@ -23,19 +28,21 @@ mat3 getVatRotationMatrix(vec4 q) {
 
 void main() {
     vUv = uv;
+    vColor = color;
+    float posFlatX = aVatBoneIndex * 2.0;
+    float rotFlatX = posFlatX + 1.0;
     
-    float v = (uFrame + 0.5) / uTotalFrames;
+    float posStrideId = floor(posFlatX / uTexDim.x);
+    float posX = mod(posFlatX, uTexDim.x);
+    float posY = uFrame * uStride + posStrideId;
 
-    float totalPackedPixels = uNumBones * 2.0;
-    
-    // packing [t,q][t,q][t,q][t,q]...
-    float idx = aVatBoneIndex * 2.0 + .5;
+    float rotStrideId = floor(rotFlatX / uTexDim.x);
+    float rotX = mod(rotFlatX, uTexDim.x);
+    float rotY = uFrame * uStride + rotStrideId;
 
-    float u_pos = idx / totalPackedPixels;
-    float u_rot = (idx + 1.0) / totalPackedPixels;
-    vec2 coords_pos = vec2(u_pos, v);
-    vec2 coords_rot = vec2(u_rot, v);
-    
+    vec2 coords_pos = vec2(posX + 0.5, posY + 0.5) / uTexDim;
+    vec2 coords_rot = vec2(rotX + 0.5, rotY + 0.5) / uTexDim;
+
     vec3 pos = texture2D(uVatTexture, coords_pos).rgb;
     vec4 q = normalize(texture2D(uVatTexture, coords_rot));
 
@@ -46,5 +53,10 @@ void main() {
     vec3 motionBridge = pos - rotatedBindPos;
     vec3 finalPosition = rotatedVertex + motionBridge;
 
+    // recalculate normals
+    mat3 normalMatrixFromBone = transpose(inverse(mat3(rotMatrix)));
+    vec3 correctedNormal = normalize(normalMatrixFromBone * normal);
+
+    csm_Normal = correctedNormal;
     csm_Position = finalPosition;
 }

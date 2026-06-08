@@ -1,23 +1,7 @@
-import { useRef } from "react";
-
-import { useTextureAnimation } from "../utils/useTextureAnimation";
-import {
-  type VatUniforms,
-  getDefaultUniforms,
-  VatMaterial,
-} from "../vat/VatSkinningMaterial";
-
-import ANIM_TEX from "../assets/animation_soft.exr";
-import TEST_MODEL_REST_GLTF from "../assets/pillars_rest.glb";
+import ANIM_TEX from "../assets/vat.exr";
+import TEST_MODEL_REST_GLTF from "../assets/001.destruction.exp_static.glb";
 import { VatModel } from "./VatModel";
 
 export function Animator() {
-  const uniforms = useRef<VatUniforms>(getDefaultUniforms());
-  useTextureAnimation(uniforms);
-
-  return (
-    <VatModel meshSrc={TEST_MODEL_REST_GLTF}>
-      <VatMaterial animationSrc={ANIM_TEX} uniforms={uniforms} roughness={0} />
-    </VatModel>
-  );
+  return <VatModel meshSrc={TEST_MODEL_REST_GLTF} animationSrc={ANIM_TEX} />;
 }
