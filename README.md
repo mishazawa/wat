@@ -1,6 +1,6 @@
 # Web ~~vertex~~ Animated Textures
 
-I wanted to try out Vertex Animation Textures (VAT) and make them work directly in the browser. I also wanted to see if I could figure out ways to use this technique for generative art. Previously, I worked on projects where we generated textures in GLSL shaders for displacement, and since VAT uses a very similar approach, it felt like a natural next step.
+I wanted to try out Vertex Animation Textures (VAT) and make them work directly [in the browser](https://xr-paint.web.app/). I also wanted to see if I could figure out ways to use this technique for generative art. Previously, I worked on projects where we generated textures in GLSL shaders for displacement, and since VAT uses a very similar approach, it felt like a natural next step.
 
 <img width="100%" height="auto" alt="image" src="https://github.com/user-attachments/assets/a22fab10-d940-42d6-a937-1e6b7746da2b" />
 
