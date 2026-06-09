@@ -48,10 +48,7 @@ void main() {
 
     mat3 rotMatrix = getVatRotationMatrix(q);
 
-    vec3 rotatedVertex = rotMatrix * position;
-    vec3 rotatedBindPos = rotMatrix * aVatBindPos;
-    vec3 motionBridge = pos - rotatedBindPos;
-    vec3 finalPosition = rotatedVertex + motionBridge;
+    vec3 finalPosition = rotMatrix * (position - aVatBindPos) + pos;
 
     // recalculate normals
     mat3 normalMatrixFromBone = transpose(inverse(mat3(rotMatrix)));

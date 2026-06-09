@@ -5,13 +5,10 @@ import { useFindChildByName } from "../utils/useFindChildByName";
 import { useFrustumCulling } from "../utils/useFrustumCulling";
 import { useRenameGeometryAttrib } from "../utils/useRenameGeometryAttrib";
 import type { ThreeElements } from "@react-three/fiber";
-import { useRef } from "react";
+
 import { useTextureAnimation } from "../utils/useTextureAnimation";
-import {
-  type VatUniforms,
-  getDefaultUniforms,
-  VatMaterial,
-} from "../vat/VatSkinningMaterial";
+import { VatMaterial } from "../vat/VatSkinningMaterial";
+import { useUniforms } from "../utils/useUniforms";
 
 type AnimatedModelProps = Prettify<
   Omit<Partial<ThreeElements["primitive"]>, "object"> & {
@@ -32,8 +29,7 @@ export function VatModel({
 
   useRenameGeometryAttrib(skin, ATTRIBUTE_MAPPING);
 
-  const uniforms = useRef<VatUniforms>(getDefaultUniforms());
-  useTextureAnimation(uniforms, 30);
+  const uniforms = useTextureAnimation(30);
 
   return (
     skin && (

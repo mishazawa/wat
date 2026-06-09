@@ -1,13 +1,10 @@
 import { useFrame } from "@react-three/fiber";
-import type { RefObject } from "react";
-import type { VatUniforms } from "../vat/VatSkinningMaterial";
 import { DEFAULT_FPS } from "../constants";
 import { useStore } from "../vat/store";
+import { useUniforms } from "./useUniforms";
 
-export function useTextureAnimation(
-  uniforms: RefObject<VatUniforms>,
-  fps: number = DEFAULT_FPS,
-) {
+export function useTextureAnimation(fps: number = DEFAULT_FPS) {
+  const uniforms = useUniforms();
   const setProgress = useStore((state) => state.setProgress);
 
   useFrame((state) => {
@@ -32,6 +29,8 @@ export function useTextureAnimation(
     currentFrame = Math.min(currentFrame, totalFrames - 1);
     uniforms.current.uFrame.value = currentFrame;
   });
+
+  return uniforms;
 }
 
 function loopMode(time: number, total: number, fps: number = DEFAULT_FPS) {

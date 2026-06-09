@@ -80,15 +80,3 @@ export function VatMaterial({
     />
   );
 }
-
-export function getDefaultUniforms() {
-  return {
-    uVatTexture: { value: null },
-    uFrame: { value: 1 },
-    uTotalFrames: { value: 1 },
-    uNumBones: { value: 1 },
-    uDiffuse: { value: new Color(0xaaffee) },
-    uTexDim: { value: new Vector2(1, 1) },
-    uStride: { value: 1 },
-  };
-}
