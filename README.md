@@ -16,8 +16,8 @@ I generated an RBD simulation in Houdini using a classic setup of three material
 <img width="auto" height="300px" alt="image" src="https://github.com/user-attachments/assets/9bbf2c85-06f5-420a-a429-5039ecd8625e" />
 
 With a clean, simplified rig ready, I needed to complete two steps:
-- **Bind Position & Lookup Index:** I generated a bind position (rest) attribute for the exported skin and a lookup index so each vertex knows which bone it belongs to. This was straightforward: I just stored the position of each bone at the rest frame and its corresponding bone number (`ptnum`).
-- **Texture Generation:** This part was a bit harder. For proper animation, I needed both `@P` (position) and `@orient` (orientation), which I extracted from the bone transforms. I stored these as RGBA values in texture pixels ($P = \text{vec3}$, $\text{orient} = \text{vec4}$), requiring 2 pixels per bone per frame.
+- **bind position & lookup index:** I generated a bind position (rest) attribute for the exported skin and a lookup index so each vertex knows which bone it belongs to. This was straightforward: I just stored the position of each bone at the rest frame and its corresponding bone number (`ptnum`).
+- **texture generation:** This part was a bit harder. For proper animation, I needed both `@P` (position) and `@orient` (orientation), which I extracted from the bone transforms. I stored these as RGBA values in texture pixels ($P = \text{vec3}$, $\text{orient} = \text{vec4}$), requiring 2 pixels per bone per frame.
 
 ### Texture generation
 
