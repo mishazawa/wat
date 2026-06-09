@@ -33,3 +33,4 @@ out/
 
 test_*.fbx
 test_*.glb
+.firebase/
