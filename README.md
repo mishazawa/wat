@@ -12,8 +12,8 @@ To achieve this, I needed a simulation that I could bake into a texture, and a c
 
 I generated an RBD simulation in Houdini using a classic setup of three materials and fractured it. Then, I converted the simulation into a KineFX rig. For optimization, I isolated the moving pieces and grouped all the non-moving (static) pieces under the root joint. Then, I deleted the internal fractured polygons to keep the mesh lightweight.
 
-<img width="auto" height="350px" alt="image" src="https://github.com/user-attachments/assets/6badb68c-9bc5-417f-b9ed-8d5ccf436076" />
-<img width="auto" height="350px" alt="image" src="https://github.com/user-attachments/assets/9bbf2c85-06f5-420a-a429-5039ecd8625e" />
+<img width="auto" height="300px" alt="image" src="https://github.com/user-attachments/assets/6badb68c-9bc5-417f-b9ed-8d5ccf436076" />
+<img width="auto" height="300px" alt="image" src="https://github.com/user-attachments/assets/9bbf2c85-06f5-420a-a429-5039ecd8625e" />
 
 With a clean, simplified rig ready, I needed to complete two steps:
 - **Bind Position & Lookup Index:** I generated a bind position (rest) attribute for the exported skin and a lookup index so each vertex knows which bone it belongs to. This was straightforward: I just stored the position of each bone at the rest frame and its corresponding bone number (`ptnum`).
