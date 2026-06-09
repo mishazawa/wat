@@ -8,7 +8,6 @@ import type { ThreeElements } from "@react-three/fiber";
 
 import { useTextureAnimation } from "../utils/useTextureAnimation";
 import { VatMaterial } from "../vat/VatSkinningMaterial";
-import { useUniforms } from "../utils/useUniforms";
 
 type AnimatedModelProps = Prettify<
   Omit<Partial<ThreeElements["primitive"]>, "object"> & {
